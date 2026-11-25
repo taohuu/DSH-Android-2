@@ -812,6 +812,8 @@
     <string name="voice_on_assist">Start voice input from the assistant gesture</string>
     <string name="read_aloud">Read answers aloud</string>
     <string name="read_aloud_desc">Speak the final answer when a turn ends (not the reasoning or tool output)</string>
+    <string name="conversation_mode">Continuous conversation</string>
+    <string name="conversation_mode_desc">After the answer is read out, listen again so you can keep talking (needs Read answers aloud)</string>
     <string name="voice_on_assist_desc">Long-press power or the assistant gesture to start listening right away; it sends when you stop talking. Long-press the floating ball to speak a task too</string>
     <string name="voice_input">Voice input</string>
     <string name="voice_stop">Finish voice input</string>
