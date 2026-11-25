@@ -2,7 +2,7 @@ name: build-apk
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [voice]
 
 concurrency:
   group: build-${{ github.ref }}
@@ -28,19 +28,32 @@ jobs:
           yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
           "$SDK/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-37.2" "build-tools;37.0.0" "platform-tools"
 
-      - name: Pull prebuilt engine + native libs from the official release
+      - name: Base source (v0.3.11) + our patch overlay
+        run: |
+          set -e
+          curl -fL -o base.tgz "https://github.com/jackwener/DSH-Android/archive/refs/tags/v0.3.11.tar.gz"
+          mkdir -p src
+          tar xzf base.tgz -C src --strip-components=1
+          cp -a voice-patch/. src/
+          ls src/app/src/main/java/io/github/jackwener/dsh/feature/voice/
+
+      - name: Prebuilt engine + native libs from the matching release
         run: |
           set -e
           curl -fL -o /tmp/official.apk "https://github.com/jackwener/DSH-Android/releases/download/v0.3.11/DSH-Android-v0.3.11-arm64.apk"
-          mkdir -p toolchains/out/engine toolchains/out/jniLibs/arm64-v8a
-          unzip -o -j /tmp/official.apk "assets/engine.zip" "assets/engine.sha256" "assets/engine-version.txt" -d toolchains/out/engine
+          mkdir -p src/toolchains/out/engine src/toolchains/out/jniLibs/arm64-v8a
+          unzip -o -j /tmp/official.apk "assets/engine.zip" "assets/engine.sha256" "assets/engine-version.txt" -d src/toolchains/out/engine
           for l in libnode libdshengine libdshnode libc++_shared libdsh_pty libdsh_flock librg; do
-            unzip -o -j /tmp/official.apk "lib/arm64-v8a/$l.so" -d toolchains/out/jniLibs/arm64-v8a
+            unzip -o -j /tmp/official.apk "lib/arm64-v8a/$l.so" -d src/toolchains/out/jniLibs/arm64-v8a
           done
-          ls -la toolchains/out/engine toolchains/out/jniLibs/arm64-v8a
+          ls -la src/toolchains/out/engine src/toolchains/out/jniLibs/arm64-v8a
+
+      - name: Unit tests
+        run: cd src && ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace
 
       - name: Build debug APK
         run: |
+          cd src
           ./gradlew :app:assembleDebug --no-daemon --stacktrace \
             -Pdsh.engineOut="$PWD/toolchains/out/engine" \
             -Pdsh.nativeOut="$PWD/toolchains/out/jniLibs"
@@ -49,7 +62,7 @@ jobs:
         if: always()
         run: |
           mkdir -p out
-          find app/build/outputs -name "*.apk" -exec cp {} out/ \; || true
+          find src/app/build/outputs -name "*.apk" -exec cp {} out/ \; || true
           ls -la out || true
 
       - uses: actions/upload-artifact@v4
