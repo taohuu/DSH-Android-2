@@ -798,6 +798,8 @@
     <string name="voice_on_assist">Голосовой ввод при вызове ассистента</string>
     <string name="read_aloud">Озвучивать ответы</string>
     <string name="read_aloud_desc">Проговаривать итоговый ответ после завершения хода (без рассуждений и вывода инструментов)</string>
+    <string name="conversation_mode">Непрерывный диалог</string>
+    <string name="conversation_mode_desc">После озвучивания ответа снова включается прослушивание, пока вы не замолчите (нужно включить озвучивание ответов)</string>
     <string name="voice_on_assist_desc">После вызова долгим нажатием клавиши питания или жестом сразу начинается прослушивание, отправка — автоматически. Долгое нажатие плавающего шара тоже запускает задачу голосом</string>
     <string name="voice_input">Голосовой ввод</string>
     <string name="voice_stop">Завершить голосовой ввод</string>
