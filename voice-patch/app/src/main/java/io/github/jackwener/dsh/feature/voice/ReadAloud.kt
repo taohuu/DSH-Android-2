@@ -69,7 +69,7 @@ class ReadAloud @Inject constructor(@ApplicationContext private val context: Con
     fun speak(answer: String, done: (() -> Unit)? = null) {
         val sentences = SpokenText.sentences(SpokenText.clean(answer))
         if (sentences.isEmpty()) return
-        onDone = done
+        if (done != null) onDone = done
         synchronized(lock) {
             if (!usable) {
                 pending = answer
