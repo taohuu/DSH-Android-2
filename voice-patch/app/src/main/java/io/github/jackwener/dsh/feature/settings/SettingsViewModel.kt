@@ -176,6 +176,7 @@ class SettingsViewModel @Inject constructor(
     fun setAllowExternalApps(on: Boolean) = viewModelScope.launch { repo.setAllowExternalApps(on) }
     fun setVoiceOnAssist(on: Boolean) = viewModelScope.launch { repo.setVoiceOnAssist(on) }
     fun setReadAloud(on: Boolean) = viewModelScope.launch { repo.setReadAloud(on) }
+    fun setConversationMode(on: Boolean) = viewModelScope.launch { repo.setConversationMode(on) }
     fun setAutoUpdateCheck(on: Boolean) = viewModelScope.launch { repo.setAutoUpdateCheck(on) }
     fun setEngineKeepAlive(on: Boolean) = viewModelScope.launch { engine.setKeepAlive(on) }
     fun setAgentScreen(on: Boolean) { viewModelScope.launch { repo.setAgentScreen(on) } }
