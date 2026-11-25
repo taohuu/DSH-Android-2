@@ -48,6 +48,13 @@ jobs:
           done
           ls -la src/toolchains/out/engine src/toolchains/out/jniLibs/arm64-v8a
 
+      - name: Retarget for a side-by-side test install
+        run: |
+          set -e
+          sed -i 's#applicationId = "io.github.jackwener.dsh"#applicationId = "io.github.jackwener.dsh.voice"#' src/app/build.gradle.kts
+          sed -i 's#<string name="app_name">DSH</string>#<string name="app_name">DSH语音</string>#' src/app/src/main/res/values/strings.xml
+          grep -n applicationId src/app/build.gradle.kts
+
       - name: Unit tests
         run: cd src && ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace
 
