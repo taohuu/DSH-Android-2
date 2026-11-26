@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.SystemClock
+import android.util.Log
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -113,24 +114,26 @@ class WakeWordService : Service() {
             override fun onBufferReceived(buffer: ByteArray?) {}
             override fun onEndOfSpeech() {}
             override fun onEvent(eventType: Int, params: Bundle?) {}
-            override fun onPartialResults(partialResults: Bundle?) = heard(best(partialResults))
+            override fun onPartialResults(partialResults: Bundle?) = heard(best(partialResults), partial = true)
             override fun onResults(results: Bundle?) = heard(best(results), final = true)
             override fun onError(error: Int) {
                 if (recognizer !== r) return
                 // 6/7 = nothing heard; 8/9 = busy (another app has the microphone); the rest restarts too.
-                schedule(if (error == SpeechRecognizer.ERROR_RECOGNIZER_BUSY) 1_500 else 400)
+                Log.i(TAG, "recognizer error $error"); schedule(if (error == SpeechRecognizer.ERROR_RECOGNIZER_BUSY) 1_500 else 150)
             }
         })
         runCatching { r.startListening(intent()) }.onFailure { schedule(1_000) }
     }
 
-    private fun heard(text: String, final: Boolean = false) {
+    private fun heard(text: String, final: Boolean = false, partial: Boolean = false) {
+        if (text.isNotEmpty()) Log.i(TAG, (if (final) "final: " else if (partial) "partial: " else "heard: ") + text)
         val word = WakeWord.firstMatch(text, words)
         if (word != null) { trigger(word); return }
         if (final) schedule(300)
     }
 
     private fun trigger(word: String) {
+        Log.i(TAG, "wake word matched: $word")
         destroyRecognizer()
         // The panel takes the microphone itself: stay quiet until it is done (continuous conversation may run on).
         pausedUntil = SystemClock.elapsedRealtime() + QUIET_MS
@@ -152,6 +155,9 @@ class WakeWordService : Service() {
         .putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         .putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
         .putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, packageName)
+        .putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 1200L)
+        .putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000L)
+        .putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 1500L)
 
     private fun best(b: Bundle?) = b?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull().orEmpty()
 
@@ -162,6 +168,7 @@ class WakeWordService : Service() {
     }
 
     companion object {
+        private const val TAG = "DSH-WAKE"
         private const val CHANNEL = "wake_word"
         private const val ID = 42
         private const val QUIET_MS = 12_000L
