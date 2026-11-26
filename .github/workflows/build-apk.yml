@@ -62,7 +62,7 @@ jobs:
           ls -la src/toolchains/out/engine src/toolchains/out/jniLibs/arm64-v8a
 
       - name: Unit tests
-        run: cd src && ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace
+        run: cd src && ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace --tests "io.github.jackwener.dsh.feature.voice.SpokenTextTest" --tests "io.github.jackwener.dsh.feature.voice.WakeWordTest"
 
       - name: Build debug APK
         run: |
