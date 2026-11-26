@@ -41,7 +41,14 @@ jobs:
           mkdir -p src
           tar xzf base.tgz -C src --strip-components=1
           cp -a voice-patch/. src/
-          ls src/app/src/main/java/io/github/jackwener/dsh/feature/voice/
+
+      - name: Retarget for a side-by-side install
+        run: |
+          set -e
+          sed -i 's/applicationId = "io.github.jackwener.dsh"/applicationId = "io.github.jackwener.dsh.voice"/' src/app/build.gradle.kts
+          sed -i 's#<string name="app_name">DSH</string>#<string name="app_name">DSH语音</string>#' src/app/src/main/res/values/strings.xml
+          grep -n 'applicationId' src/app/build.gradle.kts
+          grep -n 'name="app_name"' src/app/src/main/res/values/strings.xml
 
       - name: Prebuilt engine + native libs from the matching release
         run: |
