@@ -182,7 +182,9 @@ class SettingsViewModel @Inject constructor(
     fun setWakeWordEnabled(on: Boolean) = viewModelScope.launch {
         repo.setWakeWordEnabled(on)
         val service = Intent(context, io.github.jackwener.dsh.service.WakeWordService::class.java)
-        if (on) ContextCompat.startForegroundService(context, service) else context.stopService(service)
+        if (!on) { context.stopService(service); return@launch }
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED) return@launch
+        runCatching { ContextCompat.startForegroundService(context, service) }
     }
     fun setAutoUpdateCheck(on: Boolean) = viewModelScope.launch { repo.setAutoUpdateCheck(on) }
     fun setEngineKeepAlive(on: Boolean) = viewModelScope.launch { engine.setKeepAlive(on) }
