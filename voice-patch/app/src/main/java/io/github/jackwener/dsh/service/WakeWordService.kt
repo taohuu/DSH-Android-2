@@ -62,7 +62,13 @@ class WakeWordService : Service() {
         listen()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        when (intent?.action) {
+            ACTION_PAUSE -> { destroyRecognizer(); restart?.cancel(); pausedUntil = Long.MAX_VALUE }
+            ACTION_RESUME -> { pausedUntil = 0; schedule(0) }
+        }
+        return START_STICKY
+    }
 
     override fun onDestroy() {
         restart?.cancel()
@@ -172,5 +178,8 @@ class WakeWordService : Service() {
         private const val CHANNEL = "wake_word"
         private const val ID = 42
         private const val QUIET_MS = 12_000L
+        /** The panel / app is in front: it owns the microphone, so listening pauses until it goes away. */
+        const val ACTION_PAUSE = "io.github.jackwener.dsh.wake.PAUSE"
+        const val ACTION_RESUME = "io.github.jackwener.dsh.wake.RESUME"
     }
 }
