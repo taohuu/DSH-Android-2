@@ -71,11 +71,19 @@ jobs:
             -Pdsh.engineOut="$PWD/toolchains/out/engine" \
             -Pdsh.nativeOut="$PWD/toolchains/out/jniLibs"
 
-      - name: Collect APK
+      - name: Collect and re-sign the APK
         if: always()
         run: |
+          set -e
           mkdir -p out
-          find src/app/build/outputs -name "*.apk" -exec cp {} out/ \; || true
+          APK=$(find src/app/build/outputs -name "*.apk" | head -1)
+          if [ -n "$APK" ]; then
+            BT="$ANDROID_SDK_ROOT/build-tools/37.0.0"
+            "$BT/apksigner" sign --ks ci/dsh-debug.keystore --ks-pass pass:android \
+              --key-pass pass:android --ks-key-alias androiddebugkey \
+              --out out/dsh-debug.apk "$APK"
+            "$BT/apksigner" verify --print-certs out/dsh-debug.apk | head -5 || true
+          fi
           ls -la out || true
 
       - uses: actions/upload-artifact@v4
