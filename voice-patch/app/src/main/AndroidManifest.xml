@@ -98,6 +98,17 @@
         android:extractNativeLibs="true"
         tools:targetApi="36">
 
+        <activity-alias
+            android:name=".VoiceEntry"
+            android:targetActivity=".feature.quick.QuickActivity"
+            android:exported="true"
+            android:label="@string/voice_entry_label">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
