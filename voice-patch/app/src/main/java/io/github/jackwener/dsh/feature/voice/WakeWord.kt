@@ -8,7 +8,7 @@ package io.github.jackwener.dsh.feature.voice
  * separated by commas or newlines.
  */
 object WakeWord {
-    const val DEFAULT = "你好DSH,你好 dsh,打开DSH语音"
+    const val DEFAULT = "大肥鱼,你好DSH,你好 dsh"
 
     /** Lowercase, no whitespace and no punctuation: comparison is on the words only. */
     fun normalize(text: String): String =
