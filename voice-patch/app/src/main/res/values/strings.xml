@@ -816,6 +816,7 @@
     <string name="conversation_mode_desc">回答朗读完后自动继续听，直到你不再说话（需开启朗读回答）</string>
     <string name="wake_word">语音唤醒</string>
     <string name="wake_word_edit">唤醒词</string>
+    <string name="voice_entry_label">语音对话</string>
     <string name="wake_word_desc">常驻听唤醒词「你好DSH」，听到就打开语音面板（耗电明显；首次使用需在「手机权限」里允许麦克风）</string>
     <string name="wake_word_running">正在听「%1$s」</string>
     <string name="voice_on_assist_desc">长按电源键或手势唤起后立即开始听，说完自动发送。悬浮球长按也可语音发起任务</string>
