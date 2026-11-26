@@ -182,7 +182,21 @@ class QuickActivity : ComponentActivity() {
         outState.putBoolean(STATE_USE_CONTEXT, useContext)
     }
 
+    /** The panel is in front: the wake service must not hold the microphone while we take it. */
+    private fun wake(action: String) {
+        lifecycleScope.launch {
+            if (!settingsRepo.current().wakeWordEnabled) return@launch
+            runCatching { startService(Intent(this@QuickActivity, io.github.jackwener.dsh.service.WakeWordService::class.java).setAction(action)) }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        wake(io.github.jackwener.dsh.service.WakeWordService.ACTION_PAUSE)
+    }
+
     override fun onStop() {
+        wake(io.github.jackwener.dsh.service.WakeWordService.ACTION_RESUME)
         super.onStop()
         PanelSession.touch(this, vm.id)
     }
