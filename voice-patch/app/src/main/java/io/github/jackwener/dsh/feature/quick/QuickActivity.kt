@@ -227,6 +227,8 @@ class QuickActivity : ComponentActivity() {
         // The floating ball / capsule during a run started here: exactly that conversation (#39).
         i.getStringExtra(EXTRA_SESSION)?.let { id -> if (id != vm.id) vm.open(id); return }
         if (i.getBooleanExtra(EXTRA_VOICE, false)) listenRequest++
+        // 语音对话 shortcut: launched straight from the launcher (or 小爱), listen at once like the assistant gesture.
+        else if (i.action == Intent.ACTION_MAIN) lifecycleScope.launch { if (settingsRepo.current().voiceOnAssist) listenRequest++ }
         else if (i.getBooleanExtra(EXTRA_FROM_ASSIST, false)) lifecycleScope.launch { if (settingsRepo.current().voiceOnAssist) listenRequest++ }
         if (i.getBooleanExtra(EXTRA_SCREEN, false)) return attachScreen(reopened)
         if (i.action == ACTION_RUN_TASK) {
