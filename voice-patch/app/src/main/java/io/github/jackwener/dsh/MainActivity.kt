@@ -150,6 +150,24 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /** Opening the app must give the microphone to the app, not to the wake service. */
+    private fun wake(action: String) {
+        lifecycleScope.launch {
+            if (!settingsRepo.current().wakeWordEnabled) return@launch
+            runCatching { startService(Intent(this@MainActivity, io.github.jackwener.dsh.service.WakeWordService::class.java).setAction(action)) }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        wake(io.github.jackwener.dsh.service.WakeWordService.ACTION_PAUSE)
+    }
+
+    override fun onStop() {
+        wake(io.github.jackwener.dsh.service.WakeWordService.ACTION_RESUME)
+        super.onStop()
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
