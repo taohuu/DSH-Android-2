@@ -179,6 +179,7 @@ class SettingsViewModel @Inject constructor(
     fun setReadAloud(on: Boolean) = viewModelScope.launch { repo.setReadAloud(on) }
     fun setConversationMode(on: Boolean) = viewModelScope.launch { repo.setConversationMode(on) }
     /** 语音唤醒: starts/stops the listening service with the setting. */
+    fun setWakeWord(word: String) = viewModelScope.launch { repo.setWakeWord(word) }
     fun setWakeWordEnabled(on: Boolean) = viewModelScope.launch {
         repo.setWakeWordEnabled(on)
         val service = Intent(context, io.github.jackwener.dsh.service.WakeWordService::class.java)
