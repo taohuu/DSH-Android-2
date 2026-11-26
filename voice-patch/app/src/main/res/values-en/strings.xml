@@ -815,7 +815,7 @@
     <string name="conversation_mode">Continuous conversation</string>
     <string name="conversation_mode_desc">After the answer is read out, listen again so you can keep talking (needs Read answers aloud)</string>
     <string name="wake_word">Wake word</string>
-    <string name="wake_word_desc">Listen for 你好 DSH and open the voice panel on hearing it (battery heavy; turn it on only when needed)</string>
+    <string name="wake_word_desc">Listen for 你好 DSH and open the voice panel (battery heavy; allow the microphone under 手机权限 first)</string>
     <string name="wake_word_running">Listening for "%1$s"</string>
     <string name="voice_on_assist_desc">Long-press power or the assistant gesture to start listening right away; it sends when you stop talking. Long-press the floating ball to speak a task too</string>
     <string name="voice_input">Voice input</string>
