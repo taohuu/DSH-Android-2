@@ -64,6 +64,7 @@ import io.github.jackwener.dsh.core.designsystem.findActivity
 import io.github.jackwener.dsh.core.designsystem.BtnVariant
 import io.github.jackwener.dsh.core.designsystem.CodeCard
 import io.github.jackwener.dsh.core.designsystem.DButton
+import io.github.jackwener.dsh.core.designsystem.DDialog
 import io.github.jackwener.dsh.core.designsystem.DIcon
 import io.github.jackwener.dsh.core.designsystem.DInput
 import io.github.jackwener.dsh.core.designsystem.DSwitch
@@ -246,6 +247,7 @@ private fun GeneralSection(vm: SettingsViewModel) {
             Segmented(listOf(stringResource(R.string.busy_queue), stringResource(R.string.busy_steer)), s.busySend.ordinal, { vm.setBusySend(BusySend.entries[it]) })
         }
     }
+    var editingWake by remember { mutableStateOf(false) }
     SettingsGroupTitle(stringResource(R.string.set_entry_points))
     SettingsCard {
         val ballBlocked = (s.floatingBall || wantBall) && !canOverlay
@@ -263,6 +265,8 @@ private fun GeneralSection(vm: SettingsViewModel) {
             })
         SettingsRow(stringResource(R.string.wake_word), stringResource(R.string.wake_word_desc),
             trailing = { DSwitch(s.wakeWordEnabled, { vm.setWakeWordEnabled(it) }) })
+        SettingsRow(stringResource(R.string.wake_word_edit), s.wakeWord, onClick = { editingWake = true },
+            trailing = { DIcon(R.drawable.dsw_chevron_right_outline, size = 14.dp, tint = Dsh.colors.labelTertiary) })
         SettingsRow(stringResource(R.string.conversation_mode), stringResource(R.string.conversation_mode_desc),
             trailing = { DSwitch(s.conversationMode, { vm.setConversationMode(it) }) })
         SettingsRow(stringResource(R.string.read_aloud), stringResource(R.string.read_aloud_desc),
@@ -271,6 +275,13 @@ private fun GeneralSection(vm: SettingsViewModel) {
             trailing = { DSwitch(s.voiceOnAssist, { vm.setVoiceOnAssist(it) }) })
         SettingsRow(stringResource(R.string.allow_external_apps), stringResource(R.string.allow_external_apps_desc),
             trailing = { DSwitch(s.allowExternalApps, { vm.setAllowExternalApps(it) }) })
+    if (editingWake) {
+        var word by remember { mutableStateOf(s.wakeWord) }
+        DDialog({ editingWake = false }, stringResource(R.string.wake_word_edit), buttons = {
+            DButton(stringResource(R.string.cancel), { editingWake = false }, variant = BtnVariant.Outline)
+            DButton(stringResource(R.string.save), { editingWake = false; vm.setWakeWord(word.trim()) }, enabled = word.isNotBlank())
+        }) { DInput(word, { word = it }, placeholder = "大肥鱼,你好DSH") }
+    }
     }
 }
 
