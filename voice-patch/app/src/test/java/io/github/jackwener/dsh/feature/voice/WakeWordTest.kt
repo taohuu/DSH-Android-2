@@ -9,17 +9,22 @@ import org.junit.Test
 class WakeWordTest {
     @Test fun `spaces and punctuation do not matter`() {
         assertTrue(WakeWord.matches("你好 DSH。", "你好DSH"))
-        assertTrue(WakeWord.matches("嗯，你好 dsh，帮我看", "你好 dsh"))
+        assertTrue(WakeWord.matches("嗯，大肥鱼，帮我看", "大肥鱼"))
     }
 
     @Test fun `another phrase does not wake it`() {
-        assertFalse(WakeWord.matches("你好，帮我看一下这个", "你好DSH"))
-        assertFalse(WakeWord.matches("", "你好DSH"))
+        assertFalse(WakeWord.matches("你好，帮我看一下这个", "大肥鱼"))
+        assertFalse(WakeWord.matches("", "大肥鱼"))
     }
 
-    @Test fun `the first configured word wins`() {
+    @Test fun `the configured word wins`() {
+        assertEquals("大肥鱼", WakeWord.firstMatch("大肥鱼，帮我看", WakeWord.DEFAULT))
         assertEquals("你好DSH", WakeWord.firstMatch("你好DSH，帮我看", WakeWord.DEFAULT))
-        assertEquals("打开DSH语音", WakeWord.firstMatch("打开 dsh 语音", WakeWord.DEFAULT))
         assertNull(WakeWord.firstMatch("今天天气不错", WakeWord.DEFAULT))
+    }
+
+    @Test fun `a custom list is honoured`() {
+        assertEquals("大肥鱼", WakeWord.firstMatch("大肥鱼你好", "大肥鱼,你好DSH"))
+        assertNull(WakeWord.firstMatch("你好DSH", "大肥鱼"))
     }
 }
