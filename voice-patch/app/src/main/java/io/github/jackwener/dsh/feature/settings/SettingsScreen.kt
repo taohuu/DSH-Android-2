@@ -261,6 +261,8 @@ private fun GeneralSection(vm: SettingsViewModel) {
                     DIcon(R.drawable.dsw_chevron_right_outline, size = 14.dp, tint = Dsh.colors.labelTertiary)
                 }
             })
+        SettingsRow(stringResource(R.string.wake_word), stringResource(R.string.wake_word_desc),
+            trailing = { DSwitch(s.wakeWordEnabled, { vm.setWakeWordEnabled(it) }) })
         SettingsRow(stringResource(R.string.conversation_mode), stringResource(R.string.conversation_mode_desc),
             trailing = { DSwitch(s.conversationMode, { vm.setConversationMode(it) }) })
         SettingsRow(stringResource(R.string.read_aloud), stringResource(R.string.read_aloud_desc),
