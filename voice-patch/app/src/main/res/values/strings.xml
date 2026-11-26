@@ -814,6 +814,9 @@
     <string name="read_aloud_desc">回答完成后用语音念出来（只念最终回答，不念思考过程和工具输出）</string>
     <string name="conversation_mode">连续对话</string>
     <string name="conversation_mode_desc">回答朗读完后自动继续听，直到你不再说话（需开启朗读回答）</string>
+    <string name="wake_word">语音唤醒</string>
+    <string name="wake_word_desc">常驻听唤醒词「你好DSH」，听到就打开语音面板（耗电明显，建议只在需要时开）</string>
+    <string name="wake_word_running">正在听「%1$s」</string>
     <string name="voice_on_assist_desc">长按电源键或手势唤起后立即开始听，说完自动发送。悬浮球长按也可语音发起任务</string>
     <string name="voice_input">语音输入</string>
     <string name="voice_stop">结束语音输入</string>
