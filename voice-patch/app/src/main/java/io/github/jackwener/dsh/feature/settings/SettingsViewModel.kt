@@ -39,6 +39,7 @@ import io.github.jackwener.dsh.core.provider.probeModel
 import io.github.jackwener.dsh.core.provider.verifyCandidates
 import io.github.jackwener.dsh.core.platform.ShizukuShell
 import io.github.jackwener.dsh.service.FloatingBallService
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -177,6 +178,12 @@ class SettingsViewModel @Inject constructor(
     fun setVoiceOnAssist(on: Boolean) = viewModelScope.launch { repo.setVoiceOnAssist(on) }
     fun setReadAloud(on: Boolean) = viewModelScope.launch { repo.setReadAloud(on) }
     fun setConversationMode(on: Boolean) = viewModelScope.launch { repo.setConversationMode(on) }
+    /** 语音唤醒: starts/stops the listening service with the setting. */
+    fun setWakeWordEnabled(on: Boolean) = viewModelScope.launch {
+        repo.setWakeWordEnabled(on)
+        val service = Intent(context, io.github.jackwener.dsh.service.WakeWordService::class.java)
+        if (on) ContextCompat.startForegroundService(context, service) else context.stopService(service)
+    }
     fun setAutoUpdateCheck(on: Boolean) = viewModelScope.launch { repo.setAutoUpdateCheck(on) }
     fun setEngineKeepAlive(on: Boolean) = viewModelScope.launch { engine.setKeepAlive(on) }
     fun setAgentScreen(on: Boolean) { viewModelScope.launch { repo.setAgentScreen(on) } }
