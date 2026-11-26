@@ -79,7 +79,7 @@ data class Settings(
     /** 语音唤醒: keep the recognizer listening for [wakeWord] and open the panel already listening. Off by default. */
     val wakeWordEnabled: Boolean = false,
     /** The wake words (comma/newline separated); matched against the recognizer transcript. */
-    val wakeWord: String = "你好DSH,你好 dsh,打开DSH语音",
+    val wakeWord: String = "大肥鱼,你好DSH,你好 dsh",
     /** 在后台屏操作 App: with Shizuku, apps the agent opens run on its own virtual screen (AgentScreen). */
     val agentScreen: Boolean = true,
     /** 任务结束后自动总结经验: after a turn that worked in an app, one short model call distills App 经验 notes. */
@@ -197,7 +197,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         readAloud = this[K.readAloud] ?: false,
         conversationMode = this[K.conversationMode] ?: false,
         wakeWordEnabled = this[K.wakeWordEnabled] ?: false,
-        wakeWord = this[K.wakeWord] ?: "你好DSH,你好 dsh,打开DSH语音",
+        wakeWord = this[K.wakeWord] ?: "大肥鱼,你好DSH,你好 dsh",
         pluginRegistry = RegistryMode.of(this[K.pluginRegistry]),
         pluginRegistryCustom = this[K.pluginRegistryCustom] ?: "",
         mcpServers = decodeMcp(this[K.mcpServers]),
@@ -266,6 +266,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
     suspend fun setReadAloud(on: Boolean) = context.store.edit { it[K.readAloud] = on }
     suspend fun setConversationMode(on: Boolean) = context.store.edit { it[K.conversationMode] = on }
     suspend fun setWakeWordEnabled(on: Boolean) = context.store.edit { it[K.wakeWordEnabled] = on }
+    suspend fun setWakeWord(word: String) = context.store.edit { it[K.wakeWord] = word }
     suspend fun setAutoUpdateCheck(on: Boolean) = context.store.edit { it[K.autoUpdateCheck] = on }
     suspend fun setEngineKeepAlive(on: Boolean) = context.store.edit { it[K.engineKeepAlive] = on }
     suspend fun setPluginBackgroundSeen() = context.store.edit { it[K.pluginBackgroundSeen] = true }
